@@ -1,12 +1,13 @@
 import json
 import os
-import redis
 from collections import defaultdict
 from collections import namedtuple
 
+import redis
 from github import Github
 
-
+REDIS_URL = os.environ.get("REDIS_URL")
+REDIS_CLIENT = redis.from_url(REDIS_URL) if REDIS_URL else None
 GH_TOKEN = os.getenv("GH_TOKEN")
 REPO = os.getenv("REPO", "conan-io/conan")
 
@@ -18,9 +19,6 @@ stage_labels = (queue_label, )
 data_file = "data.json"
 
 Label = namedtuple("Label", "title color")
-
-redis_url = os.environ.get("REDIS_URL")
-REDIS_CLIENT = redis.from_url(redis_url) if redis_url else None
 
 
 class ConanIssue(object):
