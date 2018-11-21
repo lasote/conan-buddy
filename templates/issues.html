@@ -14,7 +14,7 @@
     <div id="issues">
       <ul class="nav nav-tabs">
         {% for group_name, issues in groups.items() %}
-          <li role="presentation" class="header_group" id="header_{{to_id(group_name)}}"><a href="javascript: $('.header_group').removeClass('active'); $('.group').hide(); $('#group_{{to_id(group_name)}}').show(); $('#header_{{to_id(group_name)}}').addClass('active')">{{ group_name.upper() }}</a></li>
+          <li role="presentation" class="header_group" id="header_{{to_id(group_name)}}"><a onclick="javascript:$('.header_group').removeClass('active'); $('.group').hide(); $('#group_{{to_id(group_name)}}').show(); $('#header_{{to_id(group_name)}}').addClass('active')">{{ group_name.upper() }}</a></li>
         {% endfor %}
       </ul>
 
