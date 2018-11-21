@@ -1,5 +1,6 @@
 import json
 import os
+import redis
 from collections import defaultdict
 from collections import namedtuple
 
@@ -17,6 +18,9 @@ stage_labels = (queue_label, )
 data_file = "data.json"
 
 Label = namedtuple("Label", "title color")
+
+redis_url = os.environ.get("REDIS_URL")
+REDIS_CLIENT = redis.from_url(redis_url) if redis_url else None
 
 
 class ConanIssue(object):
@@ -94,18 +98,26 @@ def generate_data():
         e = ConanIssue(issue)
         ret.append(e)
         data.append(e.serialize())
-    with open(data_file, "w") as f:
-        f.write(json.dumps(data))
+    if REDIS_CLIENT:
+        REDIS_CLIENT.set(data_file, json.dumps(data))
+    else:
+        with open(data_file, "w") as f:
+            f.write(json.dumps(data))
     return ret
 
 
 def get_data():
-    if os.path.exists(data_file):
-        with open(data_file, "r") as f:
-            tmp = json.loads(f.read())
-            return [ConanIssue.loads(e) for e in tmp]
+    tmp = None
+    if REDIS_CLIENT:
+        tmp = REDIS_CLIENT.get(data_file)
     else:
+        if os.path.exists(data_file):
+            with open(data_file, "r") as f:
+                tmp = f.read()
+    if not tmp:
         return generate_data()
+    else:
+        return [ConanIssue.loads(e) for e in json.loads(tmp)]
 
 
 def rate_issue(conan_issue):
