@@ -1,0 +1,65 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}This is an example page{% endblock %}
+
+
+{% block content %}
+
+  <body data-gr-c-s-loaded="true">
+    {% include 'navbar.html' %}
+    <div class="panel panel-default">
+        <div class="panel-body">
+            {% if triaging_without_user %}
+                <h3><span class="">"stage:triaging" without user</span></h3>
+                <div class="table-responsive">
+                  <table class="table table-striped table-sm">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for issue in triaging_without_user %}
+                      <tr>
+                        <td><a href="{{ issue.url }}" target="_blank">#{{ issue.number }}</a></td>
+                        <td><a href="{{ issue.url }}" target="_blank">{{ issue.title }}</a></td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+            {% else %}
+                <h3><span class="">"stage:triaging" OK!</span></h3>
+            {% endif %}
+
+            {% if queue_with_user %}
+                <h3><span class="">"stage:queue" with user</span></h3>
+                <div class="table-responsive">
+                  <table class="table table-striped table-sm">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Assignees</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for issue in queue_with_user %}
+                      <tr>
+                        <td><a href="{{ issue.url }}" target="_blank">#{{ issue.number }}</a></td>
+                        <td><a href="{{ issue.url }}" target="_blank">{{ issue.title }}</a></td>
+                        <td>{{ print_list(issue.assignees)|safe }}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+            {% else %}
+                <h3><span class="">"stage:queue" OK!</span></h3>
+            {% endif %}
+        </div>
+    </div>
+    {% include 'js.html' %}
+
+</body>
+{% endblock %}

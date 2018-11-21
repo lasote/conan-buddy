@@ -1,0 +1,61 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}This is an example page{% endblock %}
+
+
+{% block content %}
+  <body data-gr-c-s-loaded="true">
+    {% include 'navbar.html' %}
+     <br>
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <a href="/refresh"><span class="glyphicon glyphicon-circle-arrow-down"></span> Reload issues</a>
+        </div>
+      </div>
+    <div id="issues">
+      <ul class="nav nav-tabs">
+        {% for group_name, issues in groups.items() %}
+          <li role="presentation" class="header_group" id="header_{{to_id(group_name)}}"><a href="javascript: $('.header_group').removeClass('active'); $('.group').hide(); $('#group_{{to_id(group_name)}}').show(); $('#header_{{to_id(group_name)}}').addClass('active')">{{ group_name.upper() }}</a></li>
+        {% endfor %}
+      </ul>
+
+      <div class="panel panel-default">
+        <div class="panel-body">
+        {% for group_name, issues in groups.items() %}
+          <div class="group" id="group_{{to_id(group_name)}}">
+                <div class="table-responsive">
+                  <table class="table table-striped table-sm">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Rate</th>
+                        <th>Title</th>
+                        <th>Priority</th>
+                        <th>Complex</th>
+                        <th>Milestone</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for issue, rate in issues %}
+                      <tr>
+                        <td><a href="{{ issue.url }}" target="_blank">#{{ issue.number }}</a></td>
+                        <td>{{ decorate_label(rate)|safe }}</td>
+                        <td><a href="{{ issue.url }}" target="_blank">{{ issue.title }}</a></td>
+                        <td>{{ decorate_label(issue.priority_tag)|safe }}</td>
+                        <td>{{ decorate_label(issue.complexity_tag)|safe }}</td>
+                        <td>{{ decorate_label(issue.milestone)|safe }}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+           </div>
+        {% endfor %}
+          </div>
+      </div>
+    </div>
+    {% include 'js.html' %}
+    <script>
+      $('#header_engineering').addClass('active');
+    </script>
+</body>
+{% endblock %}
