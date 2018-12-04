@@ -1,6 +1,6 @@
 # coding=utf-8
 
-from flask import Flask, render_template, redirect
+from flask import Flask, render_template, redirect, abort
 from flask_bootstrap import Bootstrap
 
 from util import generate_data, group_queue_issues, get_data, get_triaging_without_user, \
@@ -41,9 +41,13 @@ def refresh_data():
 
 @app.route('/')
 def index():
-    issues = get_data()
-    g = group_queue_issues(issues)
-    return render_template('issues.html', groups=g)
+    try:
+        issues = get_data()
+        g = group_queue_issues(issues)
+    except Exception as e:
+        abort(500, str(e))
+    else:
+        return render_template('issues.html', groups=g)
 
 
 @app.route('/sanity')
