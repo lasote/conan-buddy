@@ -15,14 +15,14 @@ def utility_processor():
     def decorate_label(label):
         if label is None:
             return ""
-        elif label == "high":
-            return '<span class="label label-danger">high</span>'
         elif label == "medium":
             return '<span class="label label-warning">medium</span>'
         elif label == "low":
             return '<span class="label label-info">low</span>'
-        elif label == "huge":
-            return '<span class="label label-dark">huge</span>'
+        elif label in ("high", "huge", "critical"):
+            return '<span class="label label-danger">%s</span>' % label
+        elif str(label).startswith("component:"):
+            return '<span class="label label-success">%s</span>' % str(label).split(":", 1)[1]
         return '<span class="label label-primary">%s</span>' % label
 
     def to_id(text):

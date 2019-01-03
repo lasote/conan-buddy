@@ -32,6 +32,7 @@
                         <th>Priority</th>
                         <th>Complex</th>
                         <th>Milestone</th>
+                        <th>Component</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -43,6 +44,7 @@
                         <td>{{ decorate_label(issue.priority_tag)|safe }}</td>
                         <td>{{ decorate_label(issue.complexity_tag)|safe }}</td>
                         <td>{{ decorate_label(issue.milestone)|safe }}</td>
+                        <td>{{ decorate_label(issue.component)|safe}}</td>
                       </tr>
                       {% endfor %}
                     </tbody>

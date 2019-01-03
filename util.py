@@ -36,6 +36,7 @@ class ConanIssue(object):
         else:
             self.assignees = []
         self.number = gh_issue.number if gh_issue else None
+        self.component = ""
 
     @staticmethod
     def loads(data):
@@ -46,6 +47,10 @@ class ConanIssue(object):
         ret.milestone = data["milestone"]
         ret.assignees = data["assignees"]
         ret.number = data["number"]
+        ret.component = ""
+        if ret.labels:
+            components = [label.title for label in ret.labels if label.title.startswith("component:")]
+            ret.component = components[0] if components else ""
         return ret
 
     def serialize(self):
