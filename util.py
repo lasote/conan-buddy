@@ -158,6 +158,18 @@ def get_triaging_without_user():
     return [ConanIssue(i) for i in issues]
 
 
+def get_triaging_by_user():
+    users_triaging = defaultdict(lambda: 0)
+    tmp = Github(GH_TOKEN)
+    repo = tmp.get_repo(REPO)
+
+    label = repo.get_label(triaging_label)
+    issues = repo.get_issues(labels=[label])
+    for i in issues:
+        users_triaging[i.assignees[0]] += 1
+    return users_triaging
+
+
 def get_queue_with_user():
     tmp = Github(GH_TOKEN)
     repo = tmp.get_repo(REPO)

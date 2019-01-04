@@ -4,7 +4,7 @@ from flask import Flask, render_template, redirect, abort
 from flask_bootstrap import Bootstrap
 
 from util import generate_data, group_queue_issues, get_data, get_triaging_without_user, \
-    get_queue_with_user
+    get_queue_with_user, get_triaging_by_user
 
 app = Flask(__name__)
 Bootstrap(app)
@@ -54,4 +54,6 @@ def index():
 def sanity():
     t = get_triaging_without_user()
     t2 = get_queue_with_user()
-    return render_template('sanity.html', triaging_without_user=t, queue_with_user=t2)
+    t3 = get_triaging_by_user()
+    return render_template('sanity.html', triaging_without_user=t, queue_with_user=t2,
+                           triaging_by_user=t3)
