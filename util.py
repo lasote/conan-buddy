@@ -71,9 +71,10 @@ class ConanIssue(object):
             if not self._priority_value:
                 tmp = self._get_tag_value("priority:")
                 self._priority_value = float(self.tag_values.get("priority", 1)[tmp])
-        except:
+        except Exception as e:
             msg = "Error processing priority for: %s" % self.url
             print(msg)
+            print(e)
             raise Exception(msg)
         return self._priority_value
 
