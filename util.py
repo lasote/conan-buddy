@@ -137,7 +137,6 @@ def rate_issue(conan_issue):
 def group_queue_issues(issues):
 
     groups = defaultdict(list)
-    groups["Bad Tagged"] = []
     for issue in issues:
         if queue_label in [l.title for l in issue.labels]:
             for label in issue.labels:
@@ -145,14 +144,14 @@ def group_queue_issues(issues):
                 if label_name.startswith(group_prefix):
                     groups[label_name.split(group_prefix)[1]].append(issue)
 
-    ret = {}
+    ret = {"Bad Tagged": []}
     for key, issues in groups.items():
-        rate = rate_issue(issue)
-        if rate < 0:
-            ret["Bad Tagged"].append([issue, -1])
-        else:
-            ret[key] = [[issue, rate]
-                        for issue in sorted(issues, key=lambda x: rate_issue(x), reverse=True)]
+        for issue in sorted(issues, key=lambda x: rate_issue(x), reverse=True):
+            rate = rate_issue(issue)
+            if rate < 0:
+                ret["Bad Tagged"].append([issue, -1])
+            else:
+                ret[key] = [[issue, rate]]
     return ret
 
 
