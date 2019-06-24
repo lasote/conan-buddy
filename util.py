@@ -75,7 +75,8 @@ class ConanIssue(object):
             msg = "Error processing priority for: %s" % self.url
             print(msg)
             print(e)
-            raise Exception(msg)
+            # raise Exception(msg)
+            return -1
         return self._priority_value
 
     @property
