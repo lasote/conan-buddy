@@ -149,7 +149,7 @@ def group_queue_issues(issues):
     for key, issues in groups.items():
         rate = rate_issue(issue)
         if rate < 0:
-            groups["Bad Tagged"].append([issue, -1])
+            ret["Bad Tagged"].append([issue, -1])
         else:
             ret[key] = [[issue, rate]
                         for issue in sorted(issues, key=lambda x: rate_issue(x), reverse=True)]
