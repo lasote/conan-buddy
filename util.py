@@ -67,16 +67,9 @@ class ConanIssue(object):
 
     @property
     def priority_value(self):
-        try:
-            if not self._priority_value:
-                tmp = self._get_tag_value("priority:")
-                self._priority_value = float(self.tag_values.get("priority", 1)[tmp])
-        except Exception as e:
-            msg = "Error processing priority for: %s" % self.url
-            print(msg)
-            print(e)
-            # raise Exception(msg)
-            return -1
+        if not self._priority_value:
+            tmp = self._get_tag_value("priority:")
+            self._priority_value = float(self.tag_values.get("priority", 1)[tmp])
         return self._priority_value
 
     @property
@@ -144,14 +137,22 @@ def group_queue_issues(issues):
                 if label_name.startswith(group_prefix):
                     groups[label_name.split(group_prefix)[1]].append(issue)
 
-    ret = {"Bad Tagged": []}
+    # Filter the ones without valid rate
+    bad_labeled = []
     for key, issues in groups.items():
-        for issue in sorted(issues, key=lambda x: rate_issue(x), reverse=True):
-            rate = rate_issue(issue)
-            if rate < 0:
-                ret["Bad Tagged"].append([issue, -1])
+        filtered_issues = []
+        for issue in issues:
+            if not issue.complexity_tag or not issue.priority_tag:
+                bad_labeled.append(issue)
             else:
-                ret[key] = [[issue, rate]]
+                filtered_issues.append(issue)
+        groups[key] = filtered_issues
+
+    ret = {"Bad labeled": []}
+    for key, issues in groups.items():
+        ret[key] = [[issue, rate_issue(issue)]
+                    for issue in sorted(issues, key=lambda x: rate_issue(x), reverse=True)]
+    ret["Bad labeled"] = [[t, -1] for t in bad_labeled]
     return ret
 
 
